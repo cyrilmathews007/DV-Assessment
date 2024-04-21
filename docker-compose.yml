@@ -1,0 +1,39 @@
+services:
+    mongodb:
+        image: mongo
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=mongopw
+        ports:
+            - 27017:27017
+        volumes:
+            - /var/lib/mongodb/data
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+            - 5672:5672
+            - 15672:15672
+    gateway:
+        image: gateway:latest
+        build: 
+            context: .
+            dockerfile: Gateway/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=http://+:80
+            - RabbitMQConnection=host=rabbitmq
+        ports: 
+            - 5231:80
+        depends_on:
+            - rabbitmq
+    microservice:
+        image: microservice:latest
+        build: 
+            context: .
+            dockerfile: Microservice/Dockerfile
+        environment:
+            - RabbitMQHost=rabbitmq
+            - MongoDbHost=mongodb
+        depends_on:
+            - rabbitmq
+            - mongodb
