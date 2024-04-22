@@ -1,11 +1,12 @@
 ﻿using Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gateway.Services
 {
     public interface IProductService
     {
-        List<Product> GetProducts();
-        Product GetProduct(string id);
+        Task<List<Product>> GetProductsAsync();
+        Task<Product> GetProductAsync(string id);
     }
 }

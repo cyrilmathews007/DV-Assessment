@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gateway.Controllers
 {
@@ -24,9 +25,9 @@ namespace Gateway.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Product>> GetProducts()
+        public async Task<ActionResult<List<Product>>> GetProductsAsync()
         {
-            var products = _productService.GetProducts();
+            var products = await _productService.GetProductsAsync();
 
             if (products?.Count > 0) 
             {
@@ -39,9 +40,9 @@ namespace Gateway.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(string id)
+        public async Task<ActionResult<Product>> GetProductAsync(string id)
         {
-            var product = _productService.GetProduct(id);
+            var product = await _productService.GetProductAsync(id);
             
             if (product == null)
             {

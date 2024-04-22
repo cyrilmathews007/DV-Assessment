@@ -9,7 +9,7 @@ namespace Microservice.Repository
 {
     public interface IPriceReductionRepository
     {
-        double GetPriceReductionByDayOfWeek(int dayOfWeek);
-        void AddPriceReductions(List<PriceReduction> reductions);
+        Task<double> GetPriceReductionByDayOfWeekAsync(int dayOfWeek);
+        Task AddPriceReductionsAsync(List<PriceReduction> reductions);
     }
 }

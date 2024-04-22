@@ -61,11 +61,11 @@ internal partial class Program
         var provider = serviceScope.ServiceProvider;
 
         var seedService = provider.GetRequiredService<ISeedService>();
-        seedService.PopulateData();
+        seedService.PopulateDataAsync();
 
         var bus = provider.GetRequiredService<IBus>();
-        bus.Rpc.Respond<ProductsRequest, ProductsResponse>(request => provider.GetRequiredService<IProductService>().GetProducts());
-        bus.Rpc.Respond<ProductDetailsRequest, ProductDetailsResponse>(request => provider.GetRequiredService<IProductService>().GetProduct(request.ProductId));
+        bus.Rpc.RespondAsync<ProductsRequest, ProductsResponse>(async request => await provider.GetRequiredService<IProductService>().GetProductsAsync());
+        bus.Rpc.RespondAsync<ProductDetailsRequest, ProductDetailsResponse>(async request => await provider.GetRequiredService<IProductService>().GetProductAsync(request.ProductId));
 
         host.Run();
         

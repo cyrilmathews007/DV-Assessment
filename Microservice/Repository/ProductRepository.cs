@@ -19,16 +19,16 @@ namespace Microservice.Repository
             _productCollection = mongoClient.GetDatabase("deli_veggie").GetCollection<Product>("product");
         }
 
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProductsAsync()
         {
-            return _productCollection.Find(Builders<Product>.Filter.Empty).ToList();
+            return await _productCollection.Find(Builders<Product>.Filter.Empty).ToListAsync();
         }
 
-        public Product GetProduct(string id)
+        public async Task<Product> GetProductAsync(string id)
         {
             if (ObjectId.TryParse(id, out var objectId))
             {
-                return _productCollection.Find(document => document._id == objectId).FirstOrDefault();
+                return await _productCollection.Find(document => document._id == objectId).FirstOrDefaultAsync();
             }
             else
             {
@@ -36,14 +36,15 @@ namespace Microservice.Repository
             }
         }
 
-        public void AddProducts(List<Product> products)
+        public async Task AddProductsAsync(List<Product> products)
         {
-            _productCollection.InsertMany(products);
+            await _productCollection.InsertManyAsync(products);
         }
 
-        public bool HasRecords()
+        public async Task<bool> HasRecordsAsync()
         {
-            return _productCollection.CountDocuments(Builders<Product>.Filter.Empty) > 0;
+            var count = await _productCollection.CountDocumentsAsync(Builders<Product>.Filter.Empty);
+            return count > 0;
         }
     }
 }

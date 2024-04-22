@@ -9,7 +9,7 @@ namespace Microservice.Services
 {
     public interface IPriceReductionService
     {
-        void PerformPriceReduction(List<Product> products);
-        void PerformPriceReduction(Product product);
+        Task PerformPriceReductionAsync(List<Product> products);
+        Task PerformPriceReductionAsync(Product product);
     }
 }

@@ -17,14 +17,15 @@ namespace Microservice.Repository
             _reductionCollection = mongoClient.GetDatabase("deli_veggie").GetCollection<PriceReduction>("price-reduction");
         }
 
-        public double GetPriceReductionByDayOfWeek(int dayOfWeek)
+        public async Task<double> GetPriceReductionByDayOfWeekAsync(int dayOfWeek)
         {
-            return _reductionCollection.Find(reduction => reduction.DayOfWeek == dayOfWeek).FirstOrDefault()?.Reduction ?? 0;
+            var reduction = await _reductionCollection.Find(reduction => reduction.DayOfWeek == dayOfWeek).FirstOrDefaultAsync();
+            return reduction?.Reduction ?? 0;
         }
 
-        public void AddPriceReductions(List<PriceReduction> reductions)
+        public async Task AddPriceReductionsAsync(List<PriceReduction> reductions)
         {
-            _reductionCollection.InsertMany(reductions);
+            await _reductionCollection.InsertManyAsync(reductions);
         }
     }
 }

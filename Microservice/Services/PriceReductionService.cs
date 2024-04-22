@@ -17,9 +17,9 @@ namespace Microservice.Services
             _priceReductionRepository = priceReductionRepository;
         }
 
-        public void PerformPriceReduction(List<Product> products)
+        public async Task PerformPriceReductionAsync(List<Product> products)
         {
-            var reduction = _priceReductionRepository.GetPriceReductionByDayOfWeek((int)DateTime.Now.DayOfWeek);
+            var reduction = await _priceReductionRepository.GetPriceReductionByDayOfWeekAsync((int)DateTime.Now.DayOfWeek);
 
             if (reduction > 0)
             {
@@ -27,9 +27,9 @@ namespace Microservice.Services
             }
         }
 
-        public void PerformPriceReduction(Product product)
+        public async Task PerformPriceReductionAsync(Product product)
         {
-            var reduction = _priceReductionRepository.GetPriceReductionByDayOfWeek((int)DateTime.Now.DayOfWeek);
+            var reduction = await _priceReductionRepository.GetPriceReductionByDayOfWeekAsync((int)DateTime.Now.DayOfWeek);
 
             if (reduction > 0)
             {

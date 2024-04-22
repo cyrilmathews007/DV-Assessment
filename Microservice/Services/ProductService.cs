@@ -22,18 +22,18 @@ namespace Microservice.Services
             _reductionService = reductionService;
         }
 
-        public ProductsResponse GetProducts()
+        public async Task<ProductsResponse> GetProductsAsync()
         {
-            var productEntities = _productRepository.GetProducts();
+            var productEntities = await _productRepository.GetProductsAsync();
             var products = productEntities.Select(entity => MapProduct(entity)).ToList();
-            _reductionService.PerformPriceReduction(products);
+            await _reductionService.PerformPriceReductionAsync(products);
             return new ProductsResponse { Products = products };
         }
 
-        public ProductDetailsResponse GetProduct(string id)
+        public async Task<ProductDetailsResponse> GetProductAsync(string id)
         {
             var response = new ProductDetailsResponse();
-            var productEntity = _productRepository.GetProduct(id);
+            var productEntity = await _productRepository.GetProductAsync(id);
 
             if (productEntity == null)
             {
@@ -41,7 +41,7 @@ namespace Microservice.Services
             }
             
             var product = MapProduct(productEntity);
-            _reductionService.PerformPriceReduction(product);
+            await _reductionService.PerformPriceReductionAsync(product);
             return new ProductDetailsResponse { Product = product };
         }
 

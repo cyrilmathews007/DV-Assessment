@@ -31,13 +31,13 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void GetAuctions_ReturnsProducts()
+        public async Task GetAuctions_ReturnsProducts()
         {
             var productEntitites = _fixture.CreateMany<Microservice.Entities.Product>(10).ToList();
-            _productRepository.Setup(repo => repo.GetProducts()).Returns(productEntitites);
-            _reductionService.Setup(service => service.PerformPriceReduction(It.IsAny<List<Domain.Product>>()));
+            _productRepository.Setup(repo => repo.GetProductsAsync()).Returns(Task.FromResult(productEntitites));
+            _reductionService.Setup(service => service.PerformPriceReductionAsync(It.IsAny<List<Domain.Product>>()));
 
-            var productResponse = _productService.GetProducts();
+            var productResponse = await _productService.GetProductsAsync();
 
             Assert.NotNull(productResponse?.Products);
             Assert.IsType<ProductsResponse>(productResponse);
@@ -45,40 +45,40 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void GetAuctions_ReturnsEmptyProductList()
+        public async Task GetAuctions_ReturnsEmptyProductList()
         {
             var productEntitites = _fixture.CreateMany<Microservice.Entities.Product>(0).ToList();
-            _productRepository.Setup(repo => repo.GetProducts()).Returns(productEntitites);
-            _reductionService.Setup(service => service.PerformPriceReduction(It.IsAny<List<Domain.Product>>()));
+            _productRepository.Setup(repo => repo.GetProductsAsync()).Returns(Task.FromResult(productEntitites));
+            _reductionService.Setup(service => service.PerformPriceReductionAsync(It.IsAny<List<Domain.Product>>()));
 
-            var productResponse = _productService.GetProducts();
+            var productResponse = await _productService.GetProductsAsync();
 
             Assert.NotNull(productResponse?.Products);
             Assert.Empty(productResponse.Products);
         }
 
         [Fact]
-        public void GetAuction_WithValidProductId_ReturnsProduct()
+        public async Task GetAuction_WithValidProductId_ReturnsProduct()
         {
             var product = _fixture.Create<Microservice.Entities.Product>();
-            _productRepository.Setup(repo => repo.GetProduct(It.IsAny<string>())).Returns(product);
-            _reductionService.Setup(service => service.PerformPriceReduction(It.IsAny<List<Domain.Product>>()));
+            _productRepository.Setup(repo => repo.GetProductAsync(It.IsAny<string>())).Returns(Task.FromResult(product));
+            _reductionService.Setup(service => service.PerformPriceReductionAsync(It.IsAny<List<Domain.Product>>()));
 
             var productId = product._id.ToString();
 
-            var productResponse = _productService.GetProduct(productId);
+            var productResponse = await _productService.GetProductAsync(productId);
 
             Assert.NotNull(productResponse?.Product);
             Assert.Equal(productId, productResponse.Product.Id);
         }
 
         [Fact]
-        public void GetAuction_WithInValidProductId_ReturnsNullProduct()
+        public async Task GetAuction_WithInValidProductId_ReturnsNullProduct()
         {
-            _productRepository.Setup(repo => repo.GetProduct(It.IsAny<string>())).Returns((Microservice.Entities.Product) null);
-            _reductionService.Setup(service => service.PerformPriceReduction(It.IsAny<Domain.Product>()));
+            _productRepository.Setup(repo => repo.GetProductAsync(It.IsAny<string>())).Returns(Task.FromResult((Microservice.Entities.Product)null));
+            _reductionService.Setup(service => service.PerformPriceReductionAsync(It.IsAny<Domain.Product>()));
 
-            var productResponse = _productService.GetProduct("");
+            var productResponse = await _productService.GetProductAsync("");
 
             Assert.NotNull(productResponse);
             Assert.Null(productResponse.Product);

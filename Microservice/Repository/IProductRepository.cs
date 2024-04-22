@@ -10,9 +10,9 @@ namespace Microservice.Repository
 {
     public interface IProductRepository
     {
-        void AddProducts(List<Product> products);
-        Product GetProduct(string id);
-        List<Product> GetProducts();
-        bool HasRecords();
+        Task AddProductsAsync(List<Product> products);
+        Task<Product> GetProductAsync(string id);
+        Task<List<Product>> GetProductsAsync();
+        Task<bool> HasRecordsAsync();
     }
 }

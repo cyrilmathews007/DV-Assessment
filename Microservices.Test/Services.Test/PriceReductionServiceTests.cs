@@ -3,6 +3,7 @@ using Microservice.Repository;
 using Microservice.Services;
 using Moq;
 using System.Linq;
+using System.Threading.Tasks;
 using static Microservices.Test.Services.Test.ObjectIdCustomizations;
 using Product = Domain.Product;
 
@@ -23,15 +24,15 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void PerformPriceReduction_ListOfProducts_ReductionIsApplied()
+        public async Task PerformPriceReduction_ListOfProducts_ReductionIsApplied()
         {
             var products = _fixture.CreateMany<Product>(10).ToList();
             var productActualPrices = products.Select(product => new { Id = product.Id, Price = product.PriceWithReduction }).ToList();
             var reduction = 0.5;
 
-            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeek(It.IsAny<int>())).Returns(reduction);
+            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeekAsync(It.IsAny<int>())).Returns(Task.FromResult(reduction));
 
-            _reductionService.PerformPriceReduction(products);
+            await _reductionService.PerformPriceReductionAsync(products);
 
             Assert.NotNull(products);
             Assert.NotEmpty(products);
@@ -44,15 +45,15 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void PerformPriceReduction_ListOfProducts_ZeroReduction()
+        public async Task PerformPriceReduction_ListOfProducts_ZeroReduction()
         {
             var products = _fixture.CreateMany<Product>(10).ToList();
             var productActualPrices = products.Select(product => new { Id = product.Id, Price = product.PriceWithReduction }).ToList();
-            var reduction = 0;
+            var reduction = 0.0;
 
-            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeek(It.IsAny<int>())).Returns(reduction);
+            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeekAsync(It.IsAny<int>())).Returns(Task.FromResult(reduction));
 
-            _reductionService.PerformPriceReduction(products);
+            await _reductionService.PerformPriceReductionAsync(products);
 
             Assert.NotNull(products);
             Assert.NotEmpty(products);
@@ -65,28 +66,28 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void PerformPriceReduction_EmptyList_NoFailure()
+        public async Task PerformPriceReduction_EmptyList_NoFailure()
         {
             var products = _fixture.CreateMany<Product>(0).ToList();
             var reduction = 0.5;
 
-            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeek(It.IsAny<int>())).Returns(reduction);
+            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeekAsync(It.IsAny<int>())).Returns(Task.FromResult(reduction));
 
-            _reductionService.PerformPriceReduction(products);
+            await _reductionService.PerformPriceReductionAsync(products);
 
             Assert.Empty(products);
         }
 
         [Fact]
-        public void PerformPriceReduction_SingleProduct_ReductionIsApplied()
+        public async Task PerformPriceReduction_SingleProduct_ReductionIsApplied()
         {
             var product = _fixture.Create<Product>();
             var productActualPrice = product.PriceWithReduction;
             var reduction = 0.5;
 
-            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeek(It.IsAny<int>())).Returns(reduction);
+            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeekAsync(It.IsAny<int>())).Returns(Task.FromResult(reduction));
 
-            _reductionService.PerformPriceReduction(product);
+            await _reductionService.PerformPriceReductionAsync(product);
 
             Assert.NotNull(product);
 
@@ -94,15 +95,15 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public void PerformPriceReduction_SingleProduct_ZeroReduction()
+        public async Task PerformPriceReduction_SingleProduct_ZeroReduction()
         {
             var product = _fixture.Create<Product>();
             var productActualPrice = product.PriceWithReduction;
-            var reduction = 0;
+            var reduction = 0.0;
 
-            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeek(It.IsAny<int>())).Returns(reduction);
+            _reductionRepository.Setup(repo => repo.GetPriceReductionByDayOfWeekAsync(It.IsAny<int>())).Returns(Task.FromResult(reduction));
 
-            _reductionService.PerformPriceReduction(product);
+            await _reductionService.PerformPriceReductionAsync(product);
 
             Assert.NotNull(product);
 

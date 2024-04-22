@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using System;
 using System.Collections.Generic;
 using Messages;
+using System.Threading.Tasks;
 
 namespace Gateway.Services
 {
@@ -16,17 +17,17 @@ namespace Gateway.Services
             _bus = bus;
         }
 
-        public Product GetProduct(string id)
+        public async Task<Product> GetProductAsync(string id)
         {
             var request = new ProductDetailsRequest { ProductId = id };
-            var response = _bus.Rpc.Request<ProductDetailsRequest, ProductDetailsResponse>(request);
+            var response = await _bus.Rpc.RequestAsync<ProductDetailsRequest, ProductDetailsResponse>(request);
             return response.Product;
         }
 
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProductsAsync()
         {
             var request = new ProductsRequest();
-            var response = _bus.Rpc.Request<ProductsRequest, ProductsResponse>(request);
+            var response = await _bus.Rpc.RequestAsync<ProductsRequest, ProductsResponse>(request);
             return response.Products;
         }
     }

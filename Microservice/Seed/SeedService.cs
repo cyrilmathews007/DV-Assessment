@@ -3,6 +3,7 @@ using Microservice.Repository;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Microservice.Seed
 {
@@ -17,9 +18,9 @@ namespace Microservice.Seed
             _reductionRepository = reductionRepository;
         }
 
-        public void PopulateData()
+        public async Task PopulateDataAsync()
         {
-            if (_productRepository.HasRecords())
+            if (await _productRepository.HasRecordsAsync())
             {
                 return;
             }
@@ -99,8 +100,8 @@ namespace Microservice.Seed
                 },
             };
 
-            _productRepository.AddProducts(products);
-            _reductionRepository.AddPriceReductions(reductions);
+            await _productRepository.AddProductsAsync(products);
+            await _reductionRepository.AddPriceReductionsAsync(reductions);
         }
     }
 }

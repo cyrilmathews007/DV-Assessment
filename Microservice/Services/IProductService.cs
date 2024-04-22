@@ -10,7 +10,7 @@ namespace Microservice.Services
 {
     public interface IProductService
     {
-        ProductDetailsResponse GetProduct(string id);
-        ProductsResponse GetProducts();
+        Task<ProductDetailsResponse> GetProductAsync(string id);
+        Task<ProductsResponse> GetProductsAsync();
     }
 }
