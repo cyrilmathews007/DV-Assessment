@@ -31,7 +31,7 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public async Task GetAuctions_ReturnsProducts()
+        public async Task GetProductsAsync_ReturnsProducts()
         {
             var productEntitites = _fixture.CreateMany<Microservice.Entities.Product>(10).ToList();
             _productRepository.Setup(repo => repo.GetProductsAsync()).Returns(Task.FromResult(productEntitites));
@@ -45,7 +45,7 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public async Task GetAuctions_ReturnsEmptyProductList()
+        public async Task GetProductsAsync_ReturnsEmptyProductList()
         {
             var productEntitites = _fixture.CreateMany<Microservice.Entities.Product>(0).ToList();
             _productRepository.Setup(repo => repo.GetProductsAsync()).Returns(Task.FromResult(productEntitites));
@@ -58,7 +58,7 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public async Task GetAuction_WithValidProductId_ReturnsProduct()
+        public async Task GetProductAsync_WithValidProductId_ReturnsProduct()
         {
             var product = _fixture.Create<Microservice.Entities.Product>();
             _productRepository.Setup(repo => repo.GetProductAsync(It.IsAny<string>())).Returns(Task.FromResult(product));
@@ -73,7 +73,7 @@ namespace Microservices.Test.Services.Test
         }
 
         [Fact]
-        public async Task GetAuction_WithInValidProductId_ReturnsNullProduct()
+        public async Task GetProductAsync_WithInValidProductId_ReturnsNullProduct()
         {
             _productRepository.Setup(repo => repo.GetProductAsync(It.IsAny<string>())).Returns(Task.FromResult((Microservice.Entities.Product)null));
             _reductionService.Setup(service => service.PerformPriceReductionAsync(It.IsAny<Domain.Product>()));
